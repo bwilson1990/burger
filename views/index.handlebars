@@ -1,50 +1,94 @@
+<!-- modal -->
+<div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" id="myInput">
+            <div class="modal-body">
+                <p>You didn't enter a burger name!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1>Burgers!</h1>
-
 <img src="assets/img/burger.jpeg" height="55%" width="55%">
-
 <h2>Randy is hungry! Feed him a Burger!</h2>
 
-<ul>
-  {{#each burgers_table}}
-    <li>
-      <p>Burger Name: {{this.burger_name}}</p>
-    </li>
-  {{/each}}
-</ul>
-
-<h2>Add a Burger</h2>
-<form class="create-form">
-
-  <div class="form-group">
-    <label for="newBurger">Burger Name:</label>
-    <input type="text" id="newBurger" name="name">
-  </div>
-
-  <button type="submit">Add Burger</button>
-
-</form>
+<main class="container">
+    <div class="row">
+        <div class="col-md-6">
+          <h4>Burgers Not Eaten!</h4>
+            <ul>
+                {{#each burgers_table}}
+                    {{#unless devoured}}
+                        <li>{{this.id}}. {{this.burger_name}}<button data-id="{{this.id}}" class="btn btn-warning btn-sm devour">Devour it!</button></li>
+                    {{/unless}}
+                {{/each}}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h4>Burgers Eaten!</h4>
+            {{#each burgers_table}}
+                {{#if devoured}}
+                    <li class="devoured">{{this.id}}.{{this.burger_name}}</li>
+                {{/if}}
+            {{/each}}
+        </div>
+    </div>
+    <div class="centered">
+        <hr>
+        <h4>Add a burger!</h4>
+        <form id="addBurger">
+            <div class="form-group">
+                <label for="burgerName">Add Burger:</label>
+                <input type="text" class="form-control" id="burgerName" name="burger_name">
+            </div>
+            <button type="submit" id="submit" class="btn btn-warning">Add Burger</button>
+        </form>
+    </div>
+</main>
 
 <script>
-    
-  $(".create-form").on("submit", function(event) {
-    // Make sure to preventDefault on a submit event.
+
+$(".devour").on("click", function() {
+    var id = $(this).attr("data-id");
+
+    // send PUT request
+    $.ajax("/api/burgers/" + id, {
+        type: "PUT"
+    }).then(function(){
+    });
+    // reload page
+    location.reload();
+});
+
+// post request function to add a new burger
+$("#submit").on("click", function(event) {
     event.preventDefault();
 
     var newBurger = {
-      name: $("#newBurger").val().trim();
+        burger_name: $("#burgerName").val().trim()
     };
 
-    // Send the POST request.
-    $.ajax("/api/burgers", {
-      type: "POST",
-      data: newBurger
-    }).then(
-      function() {
-        console.log("created new burger");
-        // Reload the page to get the updated list
+    if (newBurger.burger_name.length === 0) {
+        // alert if burger name is empty
+        $('#getCodeModal').on('shown.bs.modal', function () {
+            $('#getCodeModal').trigger('focus')
+            })
+        $("#getCodeModal").modal('show');
+        return false;
+    } else {
+        // send post request
+        $.ajax("/api/burgers", {
+            type: "POST",
+            data: newBurger
+        }).then(function() {
+        });
+        // reload page
         location.reload();
-      }
-    );
-  });
+    };
+});
 
 </script>
