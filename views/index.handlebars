@@ -1,9 +1,9 @@
 <!-- modal -->
 <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content" id="myInput">
+        <div class="modal-content" id="modal">
             <div class="modal-body">
-                <p>You didn't enter a burger name!</p>
+                <p>Please enter a burger name!</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<h1>Burgers!</h1>
+<h1>Burger Boy!</h1>
 <img src="assets/img/burger.jpeg" height="55%" width="55%">
 <h2>Randy is hungry! Feed him a Burger!</h2>
 
@@ -49,46 +49,3 @@
         </form>
     </div>
 </main>
-
-<script>
-
-$(".devour").on("click", function() {
-    var id = $(this).attr("data-id");
-
-    // send PUT request
-    $.ajax("/api/burgers/" + id, {
-        type: "PUT"
-    }).then(function(){
-    });
-    // reload page
-    location.reload();
-});
-
-// post request function to add a new burger
-$("#submit").on("click", function(event) {
-    event.preventDefault();
-
-    var newBurger = {
-        burger_name: $("#burgerName").val().trim()
-    };
-
-    if (newBurger.burger_name.length === 0) {
-        // alert if burger name is empty
-        $('#getCodeModal').on('shown.bs.modal', function () {
-            $('#getCodeModal').trigger('focus')
-            })
-        $("#getCodeModal").modal('show');
-        return false;
-    } else {
-        // send post request
-        $.ajax("/api/burgers", {
-            type: "POST",
-            data: newBurger
-        }).then(function() {
-        });
-        // reload page
-        location.reload();
-    };
-});
-
-</script>
