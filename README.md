@@ -56,3 +56,15 @@ Our assignment was to create a burger logger using MySQL, Node, Express, Handleb
     * layouts
         * main.handlebars
     * index.handlebars
+    
+---
+
+## Deployed Link:
+
+[Eat Da Burger!](https://arcane-headland-60586.herokuapp.com/?burger_name=burg)
+
+---
+
+## Screenshot
+
+![homepage](public/assets/img/08-burger.png)
